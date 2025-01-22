@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .carousel {
+            margin: 0 auto;
+            padding: 20px 0;
+            max-width: 700px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .card {
+            width: 100%;
+            color: white;
+            border-radius: 24px;
+            box-shadow: rgba(0, 0, 0, 10%) 5px 5px 20px 0;
+            padding: 20px;
+            font-size: xx-large;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .card:nth-child(1) {
+            background: #7958ff;
+        }
+
+        .card:nth-child(2) {
+            background: #5d34f2;
+        }
+
+        .card:nth-child(3) {
+            background: #4300da;
+        }
+
+        .carousel > * {
+            flex: 0 0 100%;
+        }
+
+        .group {
+          display: flex;
+          gap: 20px;
+          padding-right: 20px;
+          will-change: transform; /* 我们应该好好对待浏览器——让它知道我们要为哪些元素添加动画。 */
+          animation: scrolling 10s linear infinite;
+        }
+
+        @keyframes scrolling {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+      </style>
+      <div class="carousel">
+        <div class="group">
+          <div class="card">A</div>
+          <div class="card">B</div>
+          <div class="card">C</div>
+        </div>
+        <!-- 添加 `aria-hidden` 以将重复的卡片隐藏在屏幕阅读器中。 -->
+        <div aria-hidden class="group">
+          <div class="card">A</div>
+          <div class="card">B</div>
+          <div class="card">C</div>
+        </div>
+      </div>
+</body>
+</html>
