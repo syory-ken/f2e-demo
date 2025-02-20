@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>剪贴板图片查看器-上传至服务器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .instructions {
+            color: #666;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        #imageDisplay {
+            max-width: 100%;
+            margin-top: 20px;
+            border: 2px dashed #ddd;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        #imageDisplay img {
+            max-width: 100%;
+            max-height: 600px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>剪贴板图片查看器</h1>
+        <div class="instructions">
+            请使用 Ctrl+V (Windows) 或 Command+V (Mac) 粘贴图片
+        </div>
+        <div id="imageDisplay">
+            等待图片粘贴...
+            <img id="pastedImage" alt="粘贴的图片将显示在这里">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('paste', function(event) {
+            event.preventDefault();
+            const items = (event.clipboardData && event.clipboardData.items) || [];
+            const imageDisplay = document.getElementById('imageDisplay');
+            const pastedImage = document.getElementById('pastedImage');
+
+            for (const item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const file = item.getAsFile();
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const url = URL.createObjectURL(file);
+
+                    pastedImage.onload = function() {
+                        URL.revokeObjectURL(url);
+                        pastedImage.style.display = 'block';
+                        imageDisplay.style.border = 'none';
+                        imageDisplay.firstChild.textContent = '';
+                    };
+
+                    pastedImage.src = url;
+                    
+                    // 上传文件到服务器
+                    fetch('http://localhost:18888/upload', {
+                        body: formData,
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

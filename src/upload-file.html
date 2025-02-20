@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传文件到服务器</title>
+</head>
+<body>
+    <input type="file" id="file" />
+    <button id="button" type="button">上传</button>
+    <script>
+        const inputDom = document.querySelector('#file');
+        document.querySelector('#button').addEventListener('click', () => {
+            const files = inputDom.files;
+
+            if (files.length > 0) {
+                const file = files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                
+                fetch('http://localhost:18888/upload', {
+                    body: formData,
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
